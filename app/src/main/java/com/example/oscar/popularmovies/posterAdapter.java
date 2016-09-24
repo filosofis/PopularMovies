@@ -54,6 +54,13 @@ public class posterAdapter extends BaseAdapter {
     public int getCount(){
         return movies.size();
     }
+    public void add(Movie movie){
+        this.movies.add(movie);
+        this.notifyDataSetChanged();
+    }
+    public void clear(){
+        this.movies.clear();
+    }
 
     public posterAdapter(Context context, List<Movie> movies){
         this.mContext = context;
@@ -63,8 +70,9 @@ public class posterAdapter extends BaseAdapter {
 
     public View getView(int position, View convertView, ViewGroup parent) {
         Movie movie = movies.get(position);
-        String imgUrl = "http://api.androidhive.info/images/glide/medium/deadpool.jpg";
-        //System.out.println("geting view");
+        String imgUrl = movie.getPosterPath();
+        System.out.println("Poster path: " + movie.getPosterPath());
+        System.out.println("imgUrl: " + imgUrl);
         if(convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(
                     R.layout.movie_item,
@@ -82,8 +90,6 @@ public class posterAdapter extends BaseAdapter {
                 .crossFade()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(poster);
-        System.out.println("Returning convertView");
-        //System.out.println(movie.getPosterPath());
         //poster.setImageResource(R.drawable.testmovie);
         return convertView;
     }

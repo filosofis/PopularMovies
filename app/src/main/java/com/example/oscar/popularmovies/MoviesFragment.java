@@ -21,45 +21,33 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Arrays;
+import java.util.ArrayList;
 
 
 public class MoviesFragment extends Fragment {
-    private posterAdapter posterAdapter;
-    private Context mContext;
-
-    Movie[] movieList = {
-            new Movie("Interstellar",
-                    "http://image.tmdb.org/t/p/w185//5N20rQURev5CNDcMjHVUZhpoCNC.jpg"),
-            new Movie("Interstellar",
-                    "http://image.tmdb.org/t/p/w185//5N20rQURev5CNDcMjHVUZhpoCNC.jpg"),
-            new Movie("Interstellar",
-                    "http://image.tmdb.org/t/p/w185//5N20rQURev5CNDcMjHVUZhpoCNC.jpg"),
-            new Movie("Interstellar",
-                    "http://image.tmdb.org/t/p/w185//5N20rQURev5CNDcMjHVUZhpoCNC.jpg"),
-            new Movie("Interstellar",
-                    "http://image.tmdb.org/t/p/w185//5N20rQURev5CNDcMjHVUZhpoCNC.jpg"),
-            new Movie("Interstellar",
-                    "http://image.tmdb.org/t/p/w185//5N20rQURev5CNDcMjHVUZhpoCNC.jpg")
-    };
+    public posterAdapter posterAdapter;
+    private ArrayList<Movie> movieList;
 
     public MoviesFragment() {
         // Required empty public constructo
+        System.out.println("Contructor constructing....");
+        movieList = new ArrayList<>();
     }
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        System.out.println("onCreate...");
         // Add this line in order for this fragment to handle menu events.
         //setHasOptionsMenu(true);
     }
     @Override
     public void onStart(){
         super.onStart();
-        //updateMovies();
+        updateMovies();
     }
 
     private void updateMovies(){
-        System.out.println("Updating movies.....");
+        System.out.println("Updating movies...");
         FetchMovieTask movieTask = new FetchMovieTask();
         movieTask.execute();
     }
@@ -67,10 +55,9 @@ public class MoviesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        System.out.println("Creating View...");
         final View rootView = inflater.inflate(R.layout.fragment_movies, container, false);
-
-        posterAdapter = new posterAdapter(getActivity(), Arrays.asList(movieList));
+        posterAdapter = new posterAdapter(getActivity(), movieList);
         GridView gridView = (GridView) rootView.findViewById(R.id.gridView_movies);
         gridView.setAdapter(posterAdapter);
         return rootView;
@@ -78,14 +65,9 @@ public class MoviesFragment extends Fragment {
     public class FetchMovieTask extends AsyncTask<String, Void,  Movie[]> {
         private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
 
-        Movie[] movieArr={null,null};
-        String[] moviePosters=null;
-        String[] movieTitles=null;
-
-
         private Movie[] getMoviesFromJson(String movieJSONStr)throws JSONException{
             System.out.println("Geting movies from Json");
-            final String MOVIE_BASE_URL = " http://image.tmdb.org/t/p/";
+            final String MOVIE_BASE_URL = " http://image.tmdb.org/t/p/w185";
             final String RESULTS = "results";
             final String POSTER_PATH = "poster_path";
             final String TITLE = "title";
@@ -93,6 +75,7 @@ public class MoviesFragment extends Fragment {
             String urlPart;
             JSONObject movieJson = new JSONObject(movieJSONStr);
             JSONArray movieArray = movieJson.getJSONArray(RESULTS);
+            Movie[] movieResult = new Movie[movieJson.length()];
             try
             {
                 for (int i = 0; i < movieJson.length(); i++) {
@@ -106,9 +89,12 @@ public class MoviesFragment extends Fragment {
 
                     urlPart= movie.getString(POSTER_PATH);
 
-                    movieTitles[i]=movieName;
+                    movieResult[i] = new Movie(movieName,
+                            MOVIE_BASE_URL + urlPart);
+
+                    /*movieTitles[i]=movieName;
                     moviePosters[i] = MOVIE_BASE_URL + urlPart;
-                    movieArr[i]=new Movie(movieTitles[i],moviePosters[i]);
+                    movieArray[i]=new Movie(movieTitles[i],moviePosters[i]);*/
 
 
                 }
@@ -117,7 +103,7 @@ public class MoviesFragment extends Fragment {
                 e.printStackTrace();
             }
 
-            return movieArr;
+            return movieResult;
         }
 
         @Override
@@ -214,5 +200,17 @@ public class MoviesFragment extends Fragment {
             return null;
         }
 
+        @Override
+        protected void onPostExecute(Movie[] movies) {
+            int count=0;
+            if(movies != null){
+                posterAdapter.clear();
+                for(Movie movie : movies){
+                    posterAdapter.add(movie);
+                    count++;
+                }
+            }
+            System.out.println("Post execute added " + count + " movies");
+        }
     }
 }
