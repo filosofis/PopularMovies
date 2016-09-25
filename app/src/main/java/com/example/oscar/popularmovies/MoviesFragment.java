@@ -1,6 +1,5 @@
 package com.example.oscar.popularmovies;
 
-import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -67,30 +66,42 @@ public class MoviesFragment extends Fragment {
 
         private Movie[] getMoviesFromJson(String movieJSONStr)throws JSONException{
             System.out.println("Geting movies from Json");
-            final String MOVIE_BASE_URL = " http://image.tmdb.org/t/p/w185";
+            final String MOVIE_BASE_URL = "http://image.tmdb.org/t/p/w185";
             final String RESULTS = "results";
             final String POSTER_PATH = "poster_path";
             final String TITLE = "title";
-            String movieName;
+            final String RELEASE_DATE = "release_date";
+            final String OVERVIEW = "overview";
+            final String ORIGINAL_TITLE = "original_title";
+            String movieTitle;
             String urlPart;
+            String overView;
+            String releaseDate;
+            String originalTitle;
             JSONObject movieJson = new JSONObject(movieJSONStr);
             JSONArray movieArray = movieJson.getJSONArray(RESULTS);
-            Movie[] movieResult = new Movie[movieJson.length()];
+            Movie[] movieResult = new Movie[movieArray.length()];
+            System.out.println("Json length  " + movieArray.length());
             try
             {
-                for (int i = 0; i < movieJson.length(); i++) {
+                for (int i = 0; i <movieArray.length(); i++) {
 
 
                     // Get the JSON object representing the movie
                     JSONObject movie = movieArray.getJSONObject(i);
 
-                    // Movie Name
-                    movieName = movie.getString(TITLE);
 
-                    urlPart= movie.getString(POSTER_PATH);
-
-                    movieResult[i] = new Movie(movieName,
-                            MOVIE_BASE_URL + urlPart);
+                    movieTitle = movie.getString(TITLE);
+                    urlPart = movie.getString(POSTER_PATH);
+                    releaseDate = movie.getString(RELEASE_DATE);
+                    overView = movie.getString(OVERVIEW);
+                    originalTitle = movie.getString(ORIGINAL_TITLE);
+                    movieResult[i] = new Movie(
+                            movieTitle,
+                            MOVIE_BASE_URL + urlPart,
+                            overView,
+                            releaseDate,
+                            originalTitle);
 
                     /*movieTitles[i]=movieName;
                     moviePosters[i] = MOVIE_BASE_URL + urlPart;

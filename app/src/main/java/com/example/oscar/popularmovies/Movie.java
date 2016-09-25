@@ -6,10 +6,40 @@ package com.example.oscar.popularmovies;
 public class Movie {
     String title;
     String posterPath;
+    String overView;
+    String releaseDate;
+    String originalTitle;
 
-    public Movie(String title, String posterPath) {
+    public Movie(String title, String posterPath, String overView, String releaseDate, String originalTitle) {
         this.title = title;
         this.posterPath = posterPath;
+        this.overView = overView;
+        this.releaseDate = releaseDate;
+        this.originalTitle = originalTitle;
+    }
+
+    public String getOverView() {
+        return overView;
+    }
+
+    public void setOverView(String overView) {
+        this.overView = overView;
+    }
+
+    public String getReleaseDate() {
+        return releaseDate;
+    }
+
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
+    public String getOriginalTitle() {
+        return originalTitle;
+    }
+
+    public void setOriginalTitle(String originalTitle) {
+        this.originalTitle = originalTitle;
     }
 
     public String getTitle() {

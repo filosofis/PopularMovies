@@ -30,6 +30,7 @@ public class posterAdapter extends BaseAdapter {
                                    boolean isFirstResource) {
             // todo log exception
             System.out.println("Shit went wrong");
+            System.out.println(e);
             // important to return false so the error placeholder can be placed
             return false;
         }
@@ -70,9 +71,10 @@ public class posterAdapter extends BaseAdapter {
 
     public View getView(int position, View convertView, ViewGroup parent) {
         Movie movie = movies.get(position);
-        String imgUrl = movie.getPosterPath();
-        System.out.println("Poster path: " + movie.getPosterPath());
-        System.out.println("imgUrl: " + imgUrl);
+        String imgUrl = movie.getPosterPath();  //<---- Does not work
+        //String imgUrl = "http://image.tmdb.org/t/p/w185/h28t2JNNGrZx0fIuAw8aHQFhIxR.jpg"; //<--Works
+        //System.out.println("Poster path: " + movie.getPosterPath());
+        //System.out.println("imgUrl: " + imgUrl);
         if(convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(
                     R.layout.movie_item,
@@ -90,7 +92,6 @@ public class posterAdapter extends BaseAdapter {
                 .crossFade()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(poster);
-        //poster.setImageResource(R.drawable.testmovie);
         return convertView;
     }
 }
