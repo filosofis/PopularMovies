@@ -45,16 +45,19 @@ public class posterAdapter extends BaseAdapter {
         }
     };
 
-    public Object getItem(int position){
+    public Movie getItem(int position){
         return movies.get(position);
     }
 
     public long getItemId(int position){
         return movies.indexOf(position);
     }
+
     public int getCount(){
         return movies.size();
     }
+
+
     public void add(Movie movie){
         this.movies.add(movie);
         this.notifyDataSetChanged();
@@ -85,6 +88,12 @@ public class posterAdapter extends BaseAdapter {
         else{
             poster = (ImageView) convertView;
         }
+        /*poster.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("CLicked");
+            }
+        });*/
         Glide.with(mContext).load(imgUrl)
                 .listener(requestListener)
                 .error(R.drawable.testmovie)

@@ -1,21 +1,52 @@
 package com.example.oscar.popularmovies;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
 /**
  * Created by Oscar on 2016-09-20.
  */
-public class Movie {
-    String title;
-    String posterPath;
-    String overView;
-    String releaseDate;
-    String originalTitle;
+public class Movie implements Serializable {
+    private String title;
+    private String posterPath;
+    private String thumbPath;
+    private String overView;
+    private String releaseDate;
+    private String originalTitle;
+    private String voteAverage;
 
-    public Movie(String title, String posterPath, String overView, String releaseDate, String originalTitle) {
+    public Movie(String title,
+                 String posterPath,
+                 String thumbPath,
+                 String overView,
+                 String releaseDate,
+                 String originalTitle,
+                 String voteAverage) {
         this.title = title;
         this.posterPath = posterPath;
+        this.thumbPath = thumbPath;
         this.overView = overView;
         this.releaseDate = releaseDate;
         this.originalTitle = originalTitle;
+        this.voteAverage = voteAverage;
+    }
+
+    public String getThumbPath() {
+        return thumbPath;
+    }
+
+    public void setThumbPath(String thumbPath) {
+        this.thumbPath = thumbPath;
+    }
+
+    public String getVoteAverage() {
+        return voteAverage;
+    }
+
+    public void setVoteAverage(String voteAverage) {
+        this.voteAverage = voteAverage;
     }
 
     public String getOverView() {
@@ -56,6 +87,17 @@ public class Movie {
 
     public void setPosterPath(String posterPath) {
         this.posterPath = posterPath;
+    }
+
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "title='" + title + '\'' +
+                ", posterPath='" + posterPath + '\'' +
+                ", overView='" + overView + '\'' +
+                ", releaseDate='" + releaseDate + '\'' +
+                ", originalTitle='" + originalTitle + '\'' +
+                '}';
     }
 }
 

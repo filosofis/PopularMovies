@@ -1,13 +1,20 @@
 package com.example.oscar.popularmovies;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import org.json.JSONArray;
@@ -26,7 +33,7 @@ import java.util.ArrayList;
 public class MoviesFragment extends Fragment {
     public posterAdapter posterAdapter;
     private ArrayList<Movie> movieList;
-
+    SharedPreferences prefs;
     public MoviesFragment() {
         // Required empty public constructo
         System.out.println("Contructor constructing....");
@@ -35,10 +42,37 @@ public class MoviesFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        prefs = getActivity().getPreferences(Context.MODE_PRIVATE);
         System.out.println("onCreate...");
-        // Add this line in order for this fragment to handle menu events.
-        //setHasOptionsMenu(true);
     }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_details, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+        SharedPreferences.Editor editor = prefs.edit();
+        if(id == R.id.sort_popular){
+            editor.putString(
+                    getString(R.string.pref_sort_key),
+                    "popularity.desc");
+            editor.apply();
+            updateMovies();
+        }
+        if(id == R.id.sort_rating){
+            editor.putString(
+                    getString(R.string.pref_sort_key),
+                    "vote_average.dsc");
+            editor.apply();
+            updateMovies();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     @Override
     public void onStart(){
         super.onStart();
@@ -59,6 +93,23 @@ public class MoviesFragment extends Fragment {
         posterAdapter = new posterAdapter(getActivity(), movieList);
         GridView gridView = (GridView) rootView.findViewById(R.id.gridView_movies);
         gridView.setAdapter(posterAdapter);
+
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getActivity(), DetailsActivity.class);
+                System.out.println("Putting extra: " +
+                        posterAdapter.getItem(position).toString());
+                intent.putExtra(
+                        "movie",
+                        posterAdapter.getItem(position)
+                        );
+                startActivity(intent);
+                /*System.out.println(
+                        posterAdapter.getItem(position).getOriginalTitle()
+                );*/
+            }
+        });
         return rootView;
     }
     public class FetchMovieTask extends AsyncTask<String, Void,  Movie[]> {
@@ -67,17 +118,20 @@ public class MoviesFragment extends Fragment {
         private Movie[] getMoviesFromJson(String movieJSONStr)throws JSONException{
             System.out.println("Geting movies from Json");
             final String MOVIE_BASE_URL = "http://image.tmdb.org/t/p/w185";
+            final String MOVIE_THUMB_URL = "http://image.tmdb.org/t/p/w92";
             final String RESULTS = "results";
             final String POSTER_PATH = "poster_path";
             final String TITLE = "title";
             final String RELEASE_DATE = "release_date";
             final String OVERVIEW = "overview";
             final String ORIGINAL_TITLE = "original_title";
+            final String VOTE_AVERAGE = "vote_average";
             String movieTitle;
             String urlPart;
             String overView;
             String releaseDate;
             String originalTitle;
+            String voteAverage;
             JSONObject movieJson = new JSONObject(movieJSONStr);
             JSONArray movieArray = movieJson.getJSONArray(RESULTS);
             Movie[] movieResult = new Movie[movieArray.length()];
@@ -96,12 +150,15 @@ public class MoviesFragment extends Fragment {
                     releaseDate = movie.getString(RELEASE_DATE);
                     overView = movie.getString(OVERVIEW);
                     originalTitle = movie.getString(ORIGINAL_TITLE);
+                    voteAverage = movie.getString(VOTE_AVERAGE);
                     movieResult[i] = new Movie(
                             movieTitle,
                             MOVIE_BASE_URL + urlPart,
+                            MOVIE_THUMB_URL + urlPart,
                             overView,
                             releaseDate,
-                            originalTitle);
+                            originalTitle,
+                            voteAverage);
 
                     /*movieTitles[i]=movieName;
                     moviePosters[i] = MOVIE_BASE_URL + urlPart;
@@ -138,19 +195,21 @@ public class MoviesFragment extends Fragment {
                 System.out.println("Trying");
                 final String FORECAST_BASE_URL =
                         "https://api.themoviedb.org/3/movie/popular?api_key=941b7f72dda3e30dee0803975fca2f05";
-                final String QUERY_PARAM = "sort_by";
-                //final String FORMAT_PARAM = "mode";
-                //final String UNITS_PARAM = "units";
-                //final String DAYS_PARAM = "cnt";
+                final String BASE_URL="https://api.themoviedb.org/3/discover/movie?api_key=";
+                final String SORT = "&sort_by=";
+                String OPTION = prefs.getString(
+                        getString(R.string.pref_sort_key),
+                        getString(R.string.pref_sort_default));
+                final String API_KEY = BuildConfig.API_KEY;
 
                 //GO SEE SUNSHINE EXPLANATION BY PARAMS[0]??
-                Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
+                /*Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
                         .appendPath(ampersand).appendQueryParameter(QUERY_PARAM, sort_by)
-                        .build();
+                        .build();*/
 
-                URL url = new URL(FORECAST_BASE_URL);
+                URL url = new URL(BASE_URL + API_KEY + SORT + OPTION);
 
-                System.out.println("Build URL " + FORECAST_BASE_URL);
+                System.out.println("Build URL " + url);
 
                 //URL url = new URL("http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=84604ead3481bd3bbd687f383f87e738");
 
