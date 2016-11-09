@@ -57,16 +57,22 @@ public class MoviesFragment extends Fragment {
         int id = item.getItemId();
         SharedPreferences.Editor editor = prefs.edit();
         if(id == R.id.sort_popular){
+//            editor.putString(
+//                    getString(R.string.pref_sort_key),
+//                    "popularity.desc");
             editor.putString(
-                    getString(R.string.pref_sort_key),
-                    "popularity.desc");
+                    getString(R.string.endpoint_key),
+                    "popular");
             editor.apply();
             updateMovies();
         }
         if(id == R.id.sort_rating){
+//            editor.putString(
+//                    getString(R.string.pref_sort_key),
+//                    "vote_average.dsc");
             editor.putString(
-                    getString(R.string.pref_sort_key),
-                    "vote_average.dsc");
+                    getString(R.string.endpoint_key),
+                    "top_rated");
             editor.apply();
             updateMovies();
         }
@@ -193,27 +199,25 @@ public class MoviesFragment extends Fragment {
 
             try {
                 System.out.println("Trying");
-                final String FORECAST_BASE_URL =
-                        "https://api.themoviedb.org/3/movie/popular?api_key=941b7f72dda3e30dee0803975fca2f05";
-                final String BASE_URL="https://api.themoviedb.org/3/discover/movie?api_key=";
-                final String SORT = "&sort_by=";
-                String OPTION = prefs.getString(
-                        getString(R.string.pref_sort_key),
-                        getString(R.string.pref_sort_default));
+                // http://api.themoviedb.org/3/movie/popular?api_key=<your_key>
+                // http://api.themoviedb.org/3/movie/top_rated?api_key=<your_key>
+                //final String BASE_URL="https://api.themoviedb.org/3/discover/movie?api_key=";
+                final String BASE_URL="http://api.themoviedb.org/3/movie/";
+                final String ENDPOINT = prefs.getString(
+                        getString(R.string.endpoint_key),
+                        getString(R.string.endpoint_default));
+                final String API = "?api_key=";
+//                final String SORT = "&sort_by=";
+//                String OPTION = prefs.getString(
+//                        getString(R.string.pref_sort_key),
+//                        getString(R.string.pref_sort_default));
                 final String API_KEY = BuildConfig.API_KEY;
 
-                //GO SEE SUNSHINE EXPLANATION BY PARAMS[0]??
-                /*Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
-                        .appendPath(ampersand).appendQueryParameter(QUERY_PARAM, sort_by)
-                        .build();*/
-
-                URL url = new URL(BASE_URL + API_KEY + SORT + OPTION);
-
+                //URL url = new URL(BASE_URL + API_KEY + SORT + OPTION);
+                URL url = new URL(BASE_URL + ENDPOINT + API + API_KEY);
                 System.out.println("Build URL " + url);
 
-                //URL url = new URL("http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=84604ead3481bd3bbd687f383f87e738");
-
-                // Create the request to OpenWeatherMap, and open the connection
+                // Create the request to TheMovieDB, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.connect();
