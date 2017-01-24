@@ -22,23 +22,23 @@ public class MovieProvider extends ContentProvider{
     private static final int SPECIFIC_MOVIE = 101;
 
     private static UriMatcher buildUriMatcher(){
-        // Build a UriMatcher by adding a specific code to return based on a match
-        // It's common to use NO_MATCH as the code for this case.
+
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = MovieContract.CONTENT_AUTHORITY;
 
-        // add a code for each type of URI you want
         matcher.addURI(authority, MovieContract.MovieEntry.TABLE_NAME, MOVIES);
         matcher.addURI(authority, MovieContract.MovieEntry.TABLE_NAME + "/#", SPECIFIC_MOVIE);
 
         return matcher;
     }
 
+    @Override
     public boolean onCreate(){
         dbHelper = new MovieDbHelper(getContext());
         return true;
     }
 
+    @Override
     public String getType(Uri uri){
         final int match = sUriMatcher.match(uri);
 
@@ -54,6 +54,7 @@ public class MovieProvider extends ContentProvider{
         }
     }
 
+    @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         Cursor cursor;
         System.out.println("Query");
@@ -87,6 +88,7 @@ public class MovieProvider extends ContentProvider{
         }
     }
 
+    @Override
     public int delete(Uri uri, String selection, String[] selectionArgs){
         final SQLiteDatabase db = dbHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
@@ -115,6 +117,7 @@ public class MovieProvider extends ContentProvider{
         return numDeleted;
     }
 
+    @Override
     public Uri insert(Uri uri, ContentValues values){
         final SQLiteDatabase db = dbHelper.getWritableDatabase();
         Uri returnUri;
@@ -136,6 +139,7 @@ public class MovieProvider extends ContentProvider{
         return returnUri;
     }
 
+    @Override
     public int bulkInsert(Uri uri, ContentValues[] values){
         final SQLiteDatabase db = dbHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
@@ -182,6 +186,7 @@ public class MovieProvider extends ContentProvider{
         }
     }
 
+    @Override
     public int update(Uri uri, ContentValues contentValues, String selection, String[] selectionArgs){
         final SQLiteDatabase db = dbHelper.getWritableDatabase();
         int numUpdated = 0;
