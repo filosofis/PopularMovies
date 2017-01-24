@@ -71,13 +71,9 @@ public class posterAdapter extends BaseAdapter {
         this.movies = movies;
     }
 
-
     public View getView(int position, View convertView, ViewGroup parent) {
         Movie movie = movies.get(position);
-        String imgUrl = movie.getPosterPath();  //<---- Does not work
-        //String imgUrl = "http://image.tmdb.org/t/p/w185/h28t2JNNGrZx0fIuAw8aHQFhIxR.jpg"; //<--Works
-        //System.out.println("Poster path: " + movie.getPosterPath());
-        //System.out.println("imgUrl: " + imgUrl);
+        String imgUrl = movie.getPosterPath();
         if(convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(
                     R.layout.movie_item,
@@ -88,12 +84,6 @@ public class posterAdapter extends BaseAdapter {
         else{
             poster = (ImageView) convertView;
         }
-        /*poster.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                System.out.println("CLicked");
-            }
-        });*/
         Glide.with(mContext).load(imgUrl)
                 .listener(requestListener)
                 .error(R.drawable.testmovie)

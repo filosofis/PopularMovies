@@ -22,7 +22,6 @@
         android:id="@+id/textViewOverView"
         android:textSize="18dp"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
         android:layout_below="@+id/imageViewThumb"
         android:textColor="@color/colorText"
         android:paddingTop="16dp"/>
@@ -68,4 +67,19 @@
         android:layout_marginTop="43dp"
         android:layout_alignTop="@+id/imageViewThumb"
         android:layout_toEndOf="@+id/imageViewThumb" />
+
+    <ImageButton
+        android:src="@drawable/a"
+        android:scaleType="fitCenter"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:id="@+id/buttonFavorite"
+        android:elevation="0dp"
+        android:theme="@android:style/Widget.Holo.CompoundButton.Star"
+        android:adjustViewBounds="false"
+        android:padding="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_above="@+id/textViewOverView"
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>

@@ -2,21 +2,19 @@
     <string name="app_name">PopularMovies</string>
     <string name="title_activity_details">DetailsActivity</string>
 
-    <string name="action_settings">Settings</string>
     <string name="title_activity_settings">Settings</string>
 
+    <!-- Sorting options -->
+    <string name="pref_header_general">General</string>
+    <string name="sort_rating">Sort by Rating</string>
+    <string name="sort_popular">Sort by Popularity</string>
+    <string name="sort_favorite">Sort by Favorites</string>
+
     <!-- Sorting values for the discovery endpoint -->
-    <string name="pref_sort_key">sort</string>
-    <string name="pref_sort_default">vote_average.dsc</string>
 
     <!-- Endpoint selectors -->
     <string name="endpoint_key">endpoint</string>
     <string name="endpoint_default">popular</string>
-
-    <!-- Example General settings -->
-    <string name="pref_header_general">General</string>
-    <string name="sort_rating">Sort by Rating</string>
-    <string name="sort_popular">Sort by popularity</string>
 
     <string name="pref_title_social_recommendations">Enable social recommendations</string>
     <string name="pref_description_social_recommendations">Recommendations for people to contact
@@ -58,20 +56,6 @@
         <item>360</item>
         <item>-1</item>
     </string-array>
-
-    <string-array name="list_preference_entries">
-        <item>Entry 1</item>
-        <item>Entry 2</item>
-        <item>Entry 3</item>
-    </string-array>
-
-    <string-array name="list_preference_entry_values">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-    </string-array>
-
-    <string-array name="multi_select_list_preference_default_value" />
 
     <string name="pref_title_system_sync_settings">System sync settings</string>
 

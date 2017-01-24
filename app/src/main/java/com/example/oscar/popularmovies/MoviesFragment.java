@@ -3,7 +3,6 @@ package com.example.oscar.popularmovies;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -76,6 +75,13 @@ public class MoviesFragment extends Fragment {
             editor.apply();
             updateMovies();
         }
+        if(id == R.id.sort_favorite){
+            editor.putString(
+                    getString(R.string.endpoint_key),
+                    "favorite");
+            editor.apply();
+            updateFavoriteMovies();
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -85,6 +91,10 @@ public class MoviesFragment extends Fragment {
         updateMovies();
     }
 
+    private void updateFavoriteMovies(){
+        System.out.println("Updating favorite movies...");
+        posterAdapter.clear();
+    }
     private void updateMovies(){
         System.out.println("Updating movies...");
         FetchMovieTask movieTask = new FetchMovieTask();
@@ -183,10 +193,7 @@ public class MoviesFragment extends Fragment {
         @Override
         protected Movie[] doInBackground(String... strings) {
             System.out.println("Doing stuff in background...");
-            /*if (strings.length == 0) {
-                System.out.println("No params");
-                return null;
-            }*/
+
             // These two need to be declared outside the try/catch
             // so that they can be closed in the finally block.
             HttpURLConnection urlConnection = null;
@@ -194,8 +201,6 @@ public class MoviesFragment extends Fragment {
 
             // Will contain the raw JSON response as a string.
             String movieJsonStr = null;
-            String sort_by="popularity.desc";
-            String ampersand= "&";
 
             try {
                 System.out.println("Trying");
