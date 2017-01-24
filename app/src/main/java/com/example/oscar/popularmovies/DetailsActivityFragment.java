@@ -61,7 +61,7 @@ public class DetailsActivityFragment extends Fragment {
     }
 
     public void insertFavorite(Movie movie){
-        System.out.println("Attempting to insert + " + movie.getTitle());
+        System.out.println("Attempting to insert " + movie.getTitle());
         Cursor cr = getContext().getContentResolver().query(
                 MovieContract.MovieEntry.CONTENT_URI,
                 new String[]{MovieContract.MovieEntry._ID},
@@ -78,6 +78,7 @@ public class DetailsActivityFragment extends Fragment {
             cv.put(MovieContract.MovieEntry.COLUMN_POSTER_THUMB, movie.getThumbPath());
             cv.put(MovieContract.MovieEntry.COLUMN_OVERVIEW, movie.getOverView());
             cv.put(MovieContract.MovieEntry.COLUMN_RATING, movie.getVoteAverage());
+            cv.put(MovieContract.MovieEntry.COLUMN_DATE, movie.getReleaseDate());
 
             getContext().getContentResolver().insert(
                     MovieContract.MovieEntry.CONTENT_URI, cv);
