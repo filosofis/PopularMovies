@@ -9,8 +9,6 @@ import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
-import com.example.oscar.popularmovies.Movie;
-
 /**
  * Created by Oscar on 2017-01-19.
  */

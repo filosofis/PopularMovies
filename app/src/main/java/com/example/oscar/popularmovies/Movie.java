@@ -16,6 +16,8 @@ public class Movie implements Serializable {
     private String releaseDate;
     private String originalTitle;
     private String voteAverage;
+    private String movieId;
+
 
     public Movie(String title,
                  String posterPath,
@@ -23,7 +25,8 @@ public class Movie implements Serializable {
                  String overView,
                  String releaseDate,
                  String originalTitle,
-                 String voteAverage) {
+                 String voteAverage,
+                 String movieId) {
         this.title = title;
         this.posterPath = posterPath;
         this.thumbPath = thumbPath;
@@ -31,11 +34,17 @@ public class Movie implements Serializable {
         this.releaseDate = releaseDate;
         this.originalTitle = originalTitle;
         this.voteAverage = voteAverage;
+        this.movieId = movieId;
+
     }
 
     public String getThumbPath() {
         return thumbPath;
     }
+
+    public String getMovieId() {return movieId;}
+
+    public void setMovieId(String movieId) {this.movieId = movieId;}
 
     public void setThumbPath(String thumbPath) {
         this.thumbPath = thumbPath;
@@ -94,9 +103,12 @@ public class Movie implements Serializable {
         return "Movie{" +
                 "title='" + title + '\'' +
                 ", posterPath='" + posterPath + '\'' +
+                ", thumbPath='" + thumbPath + '\'' +
                 ", overView='" + overView + '\'' +
                 ", releaseDate='" + releaseDate + '\'' +
                 ", originalTitle='" + originalTitle + '\'' +
+                ", voteAverage='" + voteAverage + '\'' +
+                ", movieId='" + movieId + '\'' +
                 '}';
     }
 }

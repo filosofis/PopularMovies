@@ -13,7 +13,7 @@ import com.example.oscar.popularmovies.Movie;
 public class MovieDbHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "movie.db";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 5;
 
     public MovieDbHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -25,7 +25,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
                 MovieContract.MovieEntry.TABLE_NAME + "(" +
                 MovieContract.MovieEntry._ID +
                 " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                //MovieContract.MovieEntry.COLUMN_MOVIE_ID + " TEXT NOT NULL, " +
+                MovieContract.MovieEntry.COLUMN_MOVIE_ID + " TEXT NOT NULL, " +
                 MovieContract.MovieEntry.COLUMN_TITLE + " TEXT NOT NULL, " +
                 MovieContract.MovieEntry.COLUMN_POSTER + " TEXT NOT NULL, " +
                 MovieContract.MovieEntry.COLUMN_POSTER_THUMB + " TEXT NOT NULL, " +

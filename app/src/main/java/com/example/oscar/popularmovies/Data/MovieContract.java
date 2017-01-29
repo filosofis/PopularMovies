@@ -20,11 +20,22 @@ public class MovieContract {
         public static final String _ID = "_id";
         public static final String COLUMN_POSTER = "Poster";
         public static final String COLUMN_POSTER_THUMB = "PosterThumb";
-        public static final String COLUMN_MOVIE_ID = "movie_id";
         public static final String COLUMN_OVERVIEW = "overview";
         public static final String COLUMN_TITLE = "title";
         public static final String COLUMN_DATE = "release_date";
         public static final String COLUMN_RATING = "rating";
+        public static final String COLUMN_MOVIE_ID = "movie_id";
+
+        public static final String[] COLUMNS = {
+                _ID,
+                COLUMN_POSTER,
+                COLUMN_POSTER_THUMB,
+                COLUMN_OVERVIEW,
+                COLUMN_TITLE,
+                COLUMN_DATE,
+                COLUMN_RATING,
+                COLUMN_MOVIE_ID
+        };
 
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
                 .appendPath(TABLE_NAME).build();

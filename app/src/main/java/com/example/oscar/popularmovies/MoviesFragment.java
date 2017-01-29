@@ -3,6 +3,7 @@ package com.example.oscar.popularmovies;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -15,6 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+
+import com.example.oscar.popularmovies.Data.MovieContract;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,7 +37,7 @@ public class MoviesFragment extends Fragment {
     private ArrayList<Movie> movieList;
     SharedPreferences prefs;
     public MoviesFragment() {
-        // Required empty public constructo
+        // Required empty public constructor
         System.out.println("Contructor constructing....");
         movieList = new ArrayList<>();
     }
@@ -56,9 +59,6 @@ public class MoviesFragment extends Fragment {
         int id = item.getItemId();
         SharedPreferences.Editor editor = prefs.edit();
         if(id == R.id.sort_popular){
-//            editor.putString(
-//                    getString(R.string.pref_sort_key),
-//                    "popularity.desc");
             editor.putString(
                     getString(R.string.endpoint_key),
                     "popular");
@@ -66,9 +66,6 @@ public class MoviesFragment extends Fragment {
             updateMovies();
         }
         if(id == R.id.sort_rating){
-//            editor.putString(
-//                    getString(R.string.pref_sort_key),
-//                    "vote_average.dsc");
             editor.putString(
                     getString(R.string.endpoint_key),
                     "top_rated");
@@ -76,10 +73,6 @@ public class MoviesFragment extends Fragment {
             updateMovies();
         }
         if(id == R.id.sort_favorite){
-            editor.putString(
-                    getString(R.string.endpoint_key),
-                    "favorite");
-            editor.apply();
             updateFavoriteMovies();
         }
         return super.onOptionsItemSelected(item);
@@ -94,6 +87,29 @@ public class MoviesFragment extends Fragment {
     private void updateFavoriteMovies(){
         System.out.println("Updating favorite movies...");
         posterAdapter.clear();
+
+        Cursor cr = getActivity().getContentResolver().query(
+                MovieContract.MovieEntry.CONTENT_URI,
+                MovieContract.MovieEntry.COLUMNS,
+                null,
+                null,
+                null
+        );
+
+        while(cr.moveToNext()){
+            System.out.println("Building movie list...");
+            posterAdapter.add(new Movie(
+                    cr.getString(cr.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE)),
+                    cr.getString(cr.getColumnIndex(MovieContract.MovieEntry.COLUMN_POSTER)),
+                    cr.getString(cr.getColumnIndex((MovieContract.MovieEntry.COLUMN_POSTER_THUMB))),
+                    cr.getString(cr.getColumnIndex(MovieContract.MovieEntry.COLUMN_OVERVIEW)),
+                    cr.getString(cr.getColumnIndex((MovieContract.MovieEntry.COLUMN_DATE))),
+                    cr.getString(cr.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE)),
+                    cr.getString(cr.getColumnIndex(MovieContract.MovieEntry.COLUMN_RATING)),
+                    cr.getString(cr.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_ID))
+            ));
+        }
+        cr.close();
     }
     private void updateMovies(){
         System.out.println("Updating movies...");
@@ -121,16 +137,12 @@ public class MoviesFragment extends Fragment {
                         posterAdapter.getItem(position)
                         );
                 startActivity(intent);
-                /*System.out.println(
-                        posterAdapter.getItem(position).getOriginalTitle()
-                );*/
             }
         });
         return rootView;
     }
     public class FetchMovieTask extends AsyncTask<String, Void,  Movie[]> {
         private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
-
         private Movie[] getMoviesFromJson(String movieJSONStr)throws JSONException{
             System.out.println("Geting movies from Json");
             final String MOVIE_BASE_URL = "http://image.tmdb.org/t/p/w185";
@@ -142,12 +154,14 @@ public class MoviesFragment extends Fragment {
             final String OVERVIEW = "overview";
             final String ORIGINAL_TITLE = "original_title";
             final String VOTE_AVERAGE = "vote_average";
+            final String MOVIE_ID = "id";
             String movieTitle;
             String urlPart;
             String overView;
             String releaseDate;
             String originalTitle;
             String voteAverage;
+            String movieId;
             JSONObject movieJson = new JSONObject(movieJSONStr);
             JSONArray movieArray = movieJson.getJSONArray(RESULTS);
             Movie[] movieResult = new Movie[movieArray.length()];
@@ -155,12 +169,10 @@ public class MoviesFragment extends Fragment {
             try
             {
                 for (int i = 0; i <movieArray.length(); i++) {
-
-
                     // Get the JSON object representing the movie
                     JSONObject movie = movieArray.getJSONObject(i);
 
-
+                    movieId = movie.getString(MOVIE_ID);
                     movieTitle = movie.getString(TITLE);
                     urlPart = movie.getString(POSTER_PATH);
                     releaseDate = movie.getString(RELEASE_DATE);
@@ -174,13 +186,8 @@ public class MoviesFragment extends Fragment {
                             overView,
                             releaseDate,
                             originalTitle,
-                            voteAverage);
-
-                    /*movieTitles[i]=movieName;
-                    moviePosters[i] = MOVIE_BASE_URL + urlPart;
-                    movieArray[i]=new Movie(movieTitles[i],moviePosters[i]);*/
-
-
+                            voteAverage,
+                            movieId);
                 }
             } catch (JSONException e) {
                 Log.e("Error", e.getMessage());
@@ -204,8 +211,6 @@ public class MoviesFragment extends Fragment {
 
             try {
                 System.out.println("Trying");
-                // http://api.themoviedb.org/3/movie/popular?api_key=<your_key>
-                // http://api.themoviedb.org/3/movie/top_rated?api_key=<your_key>
                 //final String BASE_URL="https://api.themoviedb.org/3/discover/movie?api_key=";
                 final String BASE_URL="http://api.themoviedb.org/3/movie/";
                 final String ENDPOINT = prefs.getString(
