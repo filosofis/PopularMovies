@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Created by Oscar on 2016-09-20.
  */
-public class posterAdapter extends BaseAdapter {
+public class PosterAdapter extends BaseAdapter {
     Context mContext;
     List<Movie> movies;
     public ImageView poster;
@@ -66,7 +66,7 @@ public class posterAdapter extends BaseAdapter {
         this.movies.clear();
     }
 
-    public posterAdapter(Context context, List<Movie> movies){
+    public PosterAdapter(Context context, List<Movie> movies){
         this.mContext = context;
         this.movies = movies;
     }
