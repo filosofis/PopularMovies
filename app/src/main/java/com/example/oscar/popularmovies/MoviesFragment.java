@@ -25,6 +25,7 @@ public class MoviesFragment extends Fragment {
     public PosterAdapter posterAdapter;
     private ArrayList<Movie> movieList;
     SharedPreferences prefs;
+
     public MoviesFragment() {
         // Required empty public constructor
         System.out.println("Contructor constructing....");

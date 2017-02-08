@@ -22,9 +22,8 @@
             android:layout_alignParentStart="true"
             android:layout_below="@+id/imageViewThumb"
             android:paddingTop="16dp"
-            android:text="TextView"
             android:textColor="@color/colorText"
-            android:textSize="18dp" />
+            android:textSize="18sp" />
 
         <ImageView
             android:id="@+id/imageViewThumb"
@@ -43,9 +42,8 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:text="TextView"
             android:textColor="@color/colorText"
-            android:textSize="35dp" />
+            android:textSize="35sp" />
 
         <TextView
             android:id="@+id/textViewVoteAverage"
@@ -54,7 +52,7 @@
             android:layout_alignStart="@+id/textViewReleaseDate"
             android:layout_below="@+id/textViewReleaseDate"
             android:layout_marginTop="41dp"
-            android:text="TextView"
+            android:textStyle="normal|bold"
             android:textColor="@color/colorText" />
 
         <TextView
@@ -65,7 +63,7 @@
             android:layout_marginStart="55dp"
             android:layout_marginTop="43dp"
             android:layout_toEndOf="@+id/imageViewThumb"
-            android:text="TextView"
+            android:textStyle="normal|bold"
             android:textColor="@color/colorText" />
 
         <ImageButton
@@ -93,7 +91,8 @@
             android:id="@+id/reviews"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/trailers" />
+            android:layout_below="@id/trailers"
+            android:paddingTop="20dp"/>
 
     </RelativeLayout>
 </ScrollView>

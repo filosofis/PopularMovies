@@ -1,6 +1,5 @@
 package com.example.oscar.popularmovies;
 
-import android.content.ClipData;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +28,16 @@ public class ReviewAdapter extends BaseAdapter {
             textAuthor = (TextView) view.findViewById(R.id.author);
             textContent = (TextView) view.findViewById(R.id.content);
         }
+    }
+
+    public ReviewAdapter(Context mContext, List<Review> reviews) {
+        this.mContext = mContext;
+        this.reviews = reviews;
+    }
+
+    public void add(Review review){
+        this.reviews.add(review);
+        this.notifyDataSetChanged();
     }
 
     @Override
