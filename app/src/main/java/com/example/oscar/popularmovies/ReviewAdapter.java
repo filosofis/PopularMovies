@@ -14,17 +14,17 @@ import java.util.List;
  */
 
 public class ReviewAdapter extends BaseAdapter {
-    Context mContext;
-    List<Review> reviews;
+    private Context mContext;
+    private List<Review> reviews;
 
     /**
      * ViewHolder pattern for resource optimization
      */
-    public static class ViewHolder{
-        public final TextView textAuthor;
-        public final TextView textContent;
+    private static class ViewHolder{
+        private final TextView textAuthor;
+        private final TextView textContent;
 
-        public ViewHolder(View view){
+        private ViewHolder(View view){
             textAuthor = (TextView) view.findViewById(R.id.author);
             textContent = (TextView) view.findViewById(R.id.content);
         }

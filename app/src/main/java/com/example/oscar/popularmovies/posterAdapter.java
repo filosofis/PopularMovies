@@ -19,9 +19,9 @@ import java.util.List;
  * Created by Oscar on 2016-09-20.
  */
 public class PosterAdapter extends BaseAdapter {
-    Context mContext;
-    List<Movie> movies;
-    public ImageView poster;
+    private Context mContext;
+    private List<Movie> movies;
+
     private RequestListener<String, GlideDrawable> requestListener =
             new RequestListener<String, GlideDrawable>() {
         @Override
@@ -74,6 +74,7 @@ public class PosterAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         Movie movie = movies.get(position);
         String imgUrl = movie.getPosterPath();
+        ImageView poster;
         if(convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(
                     R.layout.movie_item,

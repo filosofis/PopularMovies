@@ -5,8 +5,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.oscar.popularmovies.BuildConfig;
-import com.example.oscar.popularmovies.Review;
-import com.example.oscar.popularmovies.ReviewAdapter;
+import com.example.oscar.popularmovies.Trailer;
+import com.example.oscar.popularmovies.TrailerAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,58 +20,56 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Created by Oscar on 2017-02-02.
+ * Created by Oscar on 2017-02-12.
  */
 
-public class FetchReviewsTask extends AsyncTask<String, Void, Review[]>{
+public class FetchTrailersTask extends AsyncTask<String, Void, Trailer[]> {
 
-    private ReviewAdapter reviewAdapter;
+    private TrailerAdapter trailerAdapter;
     private Context context;
 
-    public FetchReviewsTask(Context context, ReviewAdapter reviewAdapter){
+    public FetchTrailersTask(Context context, TrailerAdapter trailerAdapter){
         this.context = context;
-        this.reviewAdapter = reviewAdapter;
+        this.trailerAdapter = trailerAdapter;
     }
 
-    private Review[] getReviewsFromJson(String reviewJSONstr)throws JSONException{
+    private Trailer[] getTrailersFromJson(String trailerJSONstr) throws JSONException{
 
         final String RESULTS = "results";
-        final String AUTHOR = "author";
-        final String CONTENT = "content";
-        String reviewAuthor;
-        String reviewContent;
+        final String TITLE = "name";
+        final String KEY = "key";
+        String trailerTitle;
+        String trailerKey;
 
-        JSONObject reviewJson = new JSONObject(reviewJSONstr);
-        JSONArray reviewArray = reviewJson.getJSONArray(RESULTS);
-        Review[] reviewResult = new Review[reviewArray.length()];
+        JSONObject trailerJson = new JSONObject(trailerJSONstr);
+        JSONArray trailerArray = trailerJson.getJSONArray(RESULTS);
+        Trailer[] trailerResult = new Trailer[trailerArray.length()];
 
         try{
-            for(int i=0; i<reviewArray.length(); i++){
-                JSONObject review = reviewArray.getJSONObject(i);
-                reviewAuthor = review.getString(AUTHOR);
-                reviewContent = review.getString(CONTENT);
+            for(int i=0; i<trailerArray.length(); i++){
+                JSONObject trailer = trailerArray.getJSONObject(i);
+                trailerTitle = trailer.getString(TITLE);
+                trailerKey = trailer.getString(KEY);
 
-                reviewResult[i] = new Review(reviewAuthor, reviewContent);
+                trailerResult[i] = new Trailer(trailerTitle, trailerKey);
             }
         }
-        catch (JSONException e){
+        catch(JSONException e){
             e.printStackTrace();
         }
-        return reviewResult;
+        return trailerResult;
     }
 
     @Override
-    protected Review[] doInBackground(String... params) {
-
+    protected Trailer[] doInBackground(String... params){
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
 
         // Will contain the raw JSON response as a string.
-        String reviewJsonStr = null;
-
+        String trailerJsonStr = null;
         try{
             final String BASE_URL="http://api.themoviedb.org/3/movie/";
-            final String API = "/reviews?api_key=";
+            final String API = "/videos?api_key=";
             final String API_KEY = BuildConfig.API_KEY;
             final String MOVIE_ID = params[0];
 
@@ -93,7 +91,7 @@ public class FetchReviewsTask extends AsyncTask<String, Void, Review[]>{
                 buffer.append(line + "\n");
             }
 
-            reviewJsonStr = buffer.toString();
+            trailerJsonStr = buffer.toString();
         }
         catch(IOException e){
             Log.e("", "Error ", e);
@@ -111,25 +109,25 @@ public class FetchReviewsTask extends AsyncTask<String, Void, Review[]>{
             }
 
             try {
-                return getReviewsFromJson(reviewJsonStr);
+                return getTrailersFromJson(trailerJsonStr);
             } catch (JSONException e) {
                 Log.e("", e.getMessage(), e);
                 e.printStackTrace();
             }
         }
-        return new Review[0];
+        return new Trailer[0];
     }
 
     @Override
-    protected void onPostExecute(Review[] reviews) {
+    protected void onPostExecute(Trailer[] trailers){
         int count=0;
-        if(reviews != null){
-            reviewAdapter.clear();
-            for(Review review : reviews){
-                reviewAdapter.add(review);
+        if(trailers != null){
+            trailerAdapter.clear();
+            for(Trailer trailer : trailers){
+                trailerAdapter.add(trailer);
                 count++;
             }
         }
-        System.out.println("Post execute added " + count + " reviews");
+        System.out.println("Post execute added " + count + " trailers");
     }
 }

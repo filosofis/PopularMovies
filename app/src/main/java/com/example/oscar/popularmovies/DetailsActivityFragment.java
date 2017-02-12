@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.oscar.popularmovies.Data.MovieContract;
 import com.example.oscar.popularmovies.Network.FetchReviewsTask;
+import com.example.oscar.popularmovies.Network.FetchTrailersTask;
 
 import java.util.ArrayList;
 
@@ -26,18 +27,22 @@ import java.util.ArrayList;
  */
 public class DetailsActivityFragment extends Fragment {
     public ReviewAdapter reviewAdapter;
+    public TrailerAdapter trailerAdapter;
     private ArrayList<Review> reviewList;
+    private ArrayList<Trailer> trailerList;
     private Movie movie;
 
     public DetailsActivityFragment() {
         System.out.println("details constructor");
         reviewList = new ArrayList<>();
+        trailerList = new ArrayList<>();
     }
 
     @Override
     public void onStart(){
         super.onStart();
         updateReviews();
+        updateTrailers();
     }
 
     @Override
@@ -74,12 +79,22 @@ public class DetailsActivityFragment extends Fragment {
         ListView listView = (ListView) rootView.findViewById(R.id.reviews);
         listView.setAdapter(reviewAdapter);
 
+        trailerAdapter = new TrailerAdapter(getActivity(), trailerList);
+        ListView listViewTrailer = (ListView) rootView.findViewById(R.id.trailers);
+        listViewTrailer.setAdapter(trailerAdapter);
+
         Glide.with(getActivity()).load(movie.getThumbPath())
                 .error(R.drawable.thumb)
                 .crossFade()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imageThumb);
         return rootView;
+    }
+
+    private void updateTrailers(){
+        System.out.println("update trailers");
+        FetchTrailersTask trailersTask = new FetchTrailersTask(getActivity(), trailerAdapter);
+        trailersTask.execute(movie.getMovieId());
     }
 
     private void updateReviews(){
