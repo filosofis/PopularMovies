@@ -1,17 +1,13 @@
 package com.example.oscar.popularmovies.Network;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-
 import com.example.oscar.popularmovies.BuildConfig;
 import com.example.oscar.popularmovies.Review;
 import com.example.oscar.popularmovies.ReviewAdapter;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,16 +16,14 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Created by Oscar on 2017-02-02.
+ * Fetches reviews for a given movie from TheMovieDB
  */
 
 public class FetchReviewsTask extends AsyncTask<String, Void, Review[]>{
 
     private ReviewAdapter reviewAdapter;
-    private Context context;
 
-    public FetchReviewsTask(Context context, ReviewAdapter reviewAdapter){
-        this.context = context;
+    public FetchReviewsTask(ReviewAdapter reviewAdapter){
         this.reviewAdapter = reviewAdapter;
     }
 
@@ -65,8 +59,6 @@ public class FetchReviewsTask extends AsyncTask<String, Void, Review[]>{
 
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
-
-        // Will contain the raw JSON response as a string.
         String reviewJsonStr = null;
 
         try{

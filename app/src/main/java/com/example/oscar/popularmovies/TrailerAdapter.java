@@ -41,7 +41,7 @@ public class TrailerAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public Trailer getItem(int position) {
         return trailers.get(position);
     }
 

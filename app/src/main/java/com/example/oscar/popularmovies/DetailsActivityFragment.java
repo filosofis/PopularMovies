@@ -1,13 +1,16 @@
 package com.example.oscar.popularmovies;
 
+import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -24,7 +27,7 @@ import com.example.oscar.popularmovies.Network.FetchTrailersTask;
 import java.util.ArrayList;
 
 /**
- * A placeholder fragment containing a simple view.
+ * Fragment containing a detailed information about a movie
  */
 public class DetailsActivityFragment extends Fragment {
     public ReviewAdapter reviewAdapter;
@@ -55,10 +58,8 @@ public class DetailsActivityFragment extends Fragment {
         movie = (Movie)intent.getSerializableExtra("movie");
 
         View rootView = inflater.inflate(R.layout.fragment_details, container, false);
-        //Intent intent = getActivity().getIntent();
-        //System.out.println(intent.getSerializableExtra("movie").toString());
+
         ImageButton button = (ImageButton) rootView.findViewById(R.id.buttonFavorite);
-        //final Movie movie = (Movie)intent.getSerializableExtra("movie");
         TextView title = (TextView) rootView.findViewById(R.id.textViewTitle);
         TextView releaseDate = (TextView) rootView.findViewById(R.id.textViewReleaseDate);
         TextView voteAverage = (TextView) rootView.findViewById(R.id.textViewVoteAverage);
@@ -77,13 +78,22 @@ public class DetailsActivityFragment extends Fragment {
         voteAverage.setText(rating);
         overView.setText(movie.getOverView());
 
+        //review stuff
         reviewAdapter = new ReviewAdapter(getActivity(), reviewList);
         ListView listView = (ListView) rootView.findViewById(R.id.reviews);
         listView.setAdapter(reviewAdapter);
 
+        //Trailer stuff
         trailerAdapter = new TrailerAdapter(getActivity(), trailerList);
         ListView listViewTrailer = (ListView) rootView.findViewById(R.id.trailers);
         listViewTrailer.setAdapter(trailerAdapter);
+        listViewTrailer.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+                System.out.println(trailerAdapter.getItem(position).getKey());
+                watchYoutubeVideo(trailerAdapter.getItem(position).getKey());
+            }
+        });
 
         Glide.with(getActivity()).load(movie.getThumbPath())
                 .error(R.drawable.thumb)
@@ -93,18 +103,45 @@ public class DetailsActivityFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     * Tries to open a youtube video in the youtube app, and defaults
+     * to browser if the app is not available as suggested by
+     * Roger Garzon Nieto on Stackoverflow
+     */
+    public void watchYoutubeVideo(String id){
+        Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + id));
+        Intent webIntent = new Intent(Intent.ACTION_VIEW,
+                Uri.parse("http://www.youtube.com/watch?v=" + id));
+        try {
+            startActivity(appIntent);
+        } catch (ActivityNotFoundException ex) {
+            startActivity(webIntent);
+        }
+    }
+
+    /**
+     * Updates the trailer adapter using the FetchTrailersTask
+     */
     private void updateTrailers(){
         System.out.println("update trailers");
-        FetchTrailersTask trailersTask = new FetchTrailersTask(getActivity(), trailerAdapter);
+        FetchTrailersTask trailersTask = new FetchTrailersTask(trailerAdapter);
         trailersTask.execute(movie.getMovieId());
     }
 
+    /**
+     * Updates the reviews adapter using FetchReviewTask
+     */
     private void updateReviews(){
         System.out.println("update reviews");
-        FetchReviewsTask reviewsTask = new FetchReviewsTask(getActivity(), reviewAdapter);
+        FetchReviewsTask reviewsTask = new FetchReviewsTask(reviewAdapter);
         reviewsTask.execute(movie.getMovieId());
     }
 
+    /**
+     * Inserts movie into a local databse of favoirte movies as long
+     * as its not already in the database
+     * @param movie
+     */
     public void insertFavorite(Movie movie){
         System.out.println("Attempting to insert " + movie.getTitle());
         System.out.println(movie.toString());

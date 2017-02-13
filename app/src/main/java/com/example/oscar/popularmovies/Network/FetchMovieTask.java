@@ -22,7 +22,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Created by Oscar on 2017-01-30.
+ * Fetches movies from TheMovieDB
  */
 
 public class FetchMovieTask extends AsyncTask<String, Void,  Movie[]> {

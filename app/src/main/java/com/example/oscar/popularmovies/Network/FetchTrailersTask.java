@@ -1,17 +1,13 @@
 package com.example.oscar.popularmovies.Network;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-
 import com.example.oscar.popularmovies.BuildConfig;
 import com.example.oscar.popularmovies.Trailer;
 import com.example.oscar.popularmovies.TrailerAdapter;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,16 +16,14 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Created by Oscar on 2017-02-12.
+ * Fetches trailers for a given movie from TheMovieDB
  */
 
 public class FetchTrailersTask extends AsyncTask<String, Void, Trailer[]> {
 
     private TrailerAdapter trailerAdapter;
-    private Context context;
 
-    public FetchTrailersTask(Context context, TrailerAdapter trailerAdapter){
-        this.context = context;
+    public FetchTrailersTask(TrailerAdapter trailerAdapter){
         this.trailerAdapter = trailerAdapter;
     }
 
@@ -65,7 +59,6 @@ public class FetchTrailersTask extends AsyncTask<String, Void, Trailer[]> {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
 
-        // Will contain the raw JSON response as a string.
         String trailerJsonStr = null;
         try{
             final String BASE_URL="http://api.themoviedb.org/3/movie/";
