@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -72,7 +73,8 @@ public class DetailsActivityFragment extends Fragment {
         });
         title.setText(movie.getOriginalTitle());
         releaseDate.setText(movie.getReleaseDate());
-        voteAverage.setText(movie.getVoteAverage());
+        String rating = movie.getVoteAverage() + "/10";
+        voteAverage.setText(rating);
         overView.setText(movie.getOverView());
 
         reviewAdapter = new ReviewAdapter(getActivity(), reviewList);
@@ -130,4 +132,5 @@ public class DetailsActivityFragment extends Fragment {
         }
         cr.close();
     }
+
 }
